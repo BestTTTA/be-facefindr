@@ -1,0 +1,11 @@
+# Index images
+python facefindr.py index ./photos --recursive
+
+# Search using a face image
+python facefindr.py search ./query.jpg --output ./results
+
+# Show stats
+python facefindr.py stats
+
+
+python your_script_name.py index /path/to/images --db custom_db.sqlite

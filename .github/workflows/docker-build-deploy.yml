@@ -43,10 +43,8 @@ jobs:
         - name: Deploy Server .
           run: |
             export SSHPASS=$DEPLOY_PASSWORD
-            sshpass -e ssh -o StrictHostKeyChecking=no $DEPLOY_USER@$DEPLOY_SERVER '
+            sshpass -e ssh -o StrictHostKeyChecking=no $DEPLOY_USER@$DEPLOY_SERVER "
               docker image prune -a -f
-              docker pull $DOCKER_IMAGE
-              docker compose down
-              docker run -d -p 8000:8000 --name be-facefinder $DOCKER_IMAGE
-              docker ps
-            '
+              docker pull \"$DOCKER_IMAGE\"
+              docker run -d -p 8000:8000 --name be-facefinder \"$DOCKER_IMAGE\"
+            "

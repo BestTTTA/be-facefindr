@@ -44,14 +44,9 @@ jobs:
           run: |
             export SSHPASS=$DEPLOY_PASSWORD
             sshpass -e ssh -o StrictHostKeyChecking=no $DEPLOY_USER@$DEPLOY_SERVER '
-
               docker image prune -a -f
-
               docker pull $DOCKER_IMAGE
-
               docker compose down
-
-              docker compose up -d
-
-              docker compose ps
+              docker run -d -p 8000:8000 --name be-facefinder $DOCKER_IMAGE
+              docker ps
             '

@@ -46,6 +46,7 @@ jobs:
             sshpass -e ssh -o StrictHostKeyChecking=no $DEPLOY_USER@$DEPLOY_SERVER "
               docker image prune -a -f
               docker pull \"$DOCKER_IMAGE\"
+              docker stop be-facefinder
               mkdir -p /root/face-finder/uploads /root/face-finder/results
               docker run -d -p 8000:8000 \
                 -v /root/face-finder/uploads:/app/uploads \

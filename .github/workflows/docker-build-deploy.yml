@@ -46,5 +46,10 @@ jobs:
             sshpass -e ssh -o StrictHostKeyChecking=no $DEPLOY_USER@$DEPLOY_SERVER "
               docker image prune -a -f
               docker pull \"$DOCKER_IMAGE\"
-              docker run -d -p 8000:8000 --name be-facefinder \"$DOCKER_IMAGE\"
+              mkdir -p /root/face-finder/uploads /root/face-finder/results
+              docker run -d -p 8000:8000 \
+                -v /root/face-finder/uploads:/app/uploads \
+                -v /root/face-finder/results:/app/results \
+                -e SERVER_BASE_URL=https://facefindr.api.thetigerteamacademy.net \
+                --name be-facefinder \"$DOCKER_IMAGE\"
             "

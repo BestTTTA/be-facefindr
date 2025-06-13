@@ -23,6 +23,9 @@ app.add_middleware(
     allow_headers=["*"],
 )
 
+# Server configuration
+SERVER_BASE_URL = "https://facefindr.api.thetigerteamacademy.net"  # Updated domain
+
 # Initialize FaceFindr
 face_finder = FaceFindr(db_path="facedb.sqlite")
 
@@ -31,6 +34,10 @@ UPLOAD_DIR = Path("uploads")
 RESULTS_DIR = Path("results")
 UPLOAD_DIR.mkdir(exist_ok=True)
 RESULTS_DIR.mkdir(exist_ok=True)
+
+# Ensure directories have proper permissions
+os.chmod(UPLOAD_DIR, 0o777)
+os.chmod(RESULTS_DIR, 0o777)
 
 # Thread pool for parallel processing
 executor = ThreadPoolExecutor(max_workers=4)
@@ -60,7 +67,7 @@ async def process_image_for_search_async(image_path: str, tolerance: float = 0.4
         shutil.copy2(face.image_path, result_path)
 
         match_info = {
-            "image_url": f"/results/{result_filename}",
+            "image_url": f"{SERVER_BASE_URL}/results/{result_filename}",
             "confidence": float(confidence),
             "original_path": face.image_path,
             "face_location": face.face_location,
@@ -185,8 +192,11 @@ async def get_result_image(filename: str):
     """Get a processed result image"""
     file_path = RESULTS_DIR / filename
     if not file_path.exists():
-        raise HTTPException(status_code=404, detail="Image not found")
-    return FileResponse(file_path)
+        raise HTTPException(status_code=404, detail=f"Image not found: {filename}")
+    try:
+        return FileResponse(file_path, media_type="image/jpeg")
+    except Exception as e:
+        raise HTTPException(status_code=500, detail=f"Error serving image: {str(e)}")
 
 @app.get("/stats")
 async def get_stats():

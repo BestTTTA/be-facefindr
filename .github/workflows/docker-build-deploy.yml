@@ -10,6 +10,7 @@ env:
   REGISTRY: ghcr.io
   IMAGE_NAME: ${{ github.repository_owner }}/be-facefindr
   VERSION: 1.0.0
+  CACHE_REF: ${{ github.repository_owner }}/be-facefindr
 
 jobs:
   build-and-push:
@@ -52,8 +53,8 @@ jobs:
           push: ${{ github.event_name != 'pull_request' }}
           tags: ${{ steps.meta.outputs.tags }}
           labels: ${{ steps.meta.outputs.labels }}
-          cache-from: type=registry,ref=${{ env.REGISTRY }}/${{ env.IMAGE_NAME }}:buildcache
-          cache-to: type=registry,ref=${{ env.REGISTRY }}/${{ env.IMAGE_NAME }}:buildcache,mode=max
+          cache-from: type=registry,ref=${{ env.REGISTRY }}/${{ env.CACHE_REF }}:buildcache
+          cache-to: type=registry,ref=${{ env.REGISTRY }}/${{ env.CACHE_REF }}:buildcache,mode=max
 
   deploy:
     needs: build-and-push

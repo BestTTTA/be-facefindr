@@ -45,6 +45,13 @@ jobs:
           tags: |
             type=raw,value=${{ env.VERSION }}
             type=raw,value=latest
+          flavor: |
+            latest=auto
+          labels: |
+            org.opencontainers.image.source=https://github.com/${{ github.repository_owner }}/be-facefindr
+            org.opencontainers.image.url=https://github.com/${{ github.repository_owner }}/be-facefindr
+            org.opencontainers.image.title=be-facefindr
+            org.opencontainers.image.version=${{ env.VERSION }}
 
       - name: Build and push Docker image
         uses: docker/build-push-action@v4

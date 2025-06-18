@@ -55,6 +55,7 @@ jobs:
               docker run -d -p 8000:8000 \
                 -v /root/face-finder/uploads:/app/uploads \
                 -v /root/face-finder/results:/app/results \
+                -v /root/face-finder/facedb.sqlite:/app/facedb.sqlite \
                 -e SERVER_BASE_URL=https://facefindr.api.thetigerteamacademy.net \
                 --name be-facefinder \"$DOCKER_IMAGE\"
             "

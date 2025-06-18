@@ -118,12 +118,7 @@ async def upload_image_to_database(file: UploadFile = File(...)):
         with file_path.open("wb") as buffer:
             shutil.copyfileobj(file.file, buffer)
 
-        # Add image to database
         db_add_result = await add_image_to_db_async(str(file_path))
-
-        # Optionally, delete the uploaded file after processing if it's no longer needed in 'uploads'
-        # if file_path.exists():
-        #     os.remove(file_path)
 
         return {
             "status": "success",
@@ -135,17 +130,13 @@ async def upload_image_to_database(file: UploadFile = File(...)):
     except Exception as e:
         raise HTTPException(status_code=500, detail=f"Failed to upload image to database: {str(e)}")
 
-# --- MODIFIED ENDPOINT FOR SEARCHING ---
 @app.post("/search-image")
 async def search_uploaded_image(file: UploadFile = File(...)):
-    """Uploads an image, searches for similar faces, and returns results."""
-    # Save uploaded file temporarily for searching
     file_path = UPLOAD_DIR / f"{uuid.uuid4()}_{file.filename}"
     try:
         with file_path.open("wb") as buffer:
             shutil.copyfileobj(file.file, buffer)
 
-        # Process the image for search
         results = await process_image_for_search_async(str(file_path))
 
         return {
@@ -156,10 +147,8 @@ async def search_uploaded_image(file: UploadFile = File(...)):
     except Exception as e:
         raise HTTPException(status_code=500, detail=f"Failed to search image: {str(e)}")
     finally:
-        # Clean up the temporarily uploaded file after searching
         if file_path.exists():
             os.remove(file_path)
-
 
 @app.get("/results/{filename}")
 async def get_result_image(filename: str):

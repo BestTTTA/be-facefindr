@@ -52,14 +52,13 @@ jobs:
               docker rm be-facefinder || true
               
               mkdir -p /root/face-finder/uploads /root/face-finder/results
-              touch /root/face-finder/facedb.sqlite
-              chmod 777 /root/face-finder/facedb.sqlite
-              chmod 777 /root/face-finder/uploads
-              chmod 777 /root/face-finder/results
+              mkdir -p /root/face-finder/db
+              touch /root/face-finder/db/facedb.sqlite
+              chmod -R 777 /root/face-finder
               docker run -d -p 8000:8000 \
                 -v /root/face-finder/uploads:/app/uploads \
                 -v /root/face-finder/results:/app/results \
-                -v /root/face-finder/facedb.sqlite:/app/facedb.sqlite \
+                -v /root/face-finder/db/facedb.sqlite:/app/facedb.sqlite \
                 -e SERVER_BASE_URL=https://facefindr.api.thetigerteamacademy.net \
                 --name be-facefinder \"$DOCKER_IMAGE\"
             "

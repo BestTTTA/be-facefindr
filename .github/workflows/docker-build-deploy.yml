@@ -52,6 +52,10 @@ jobs:
               docker rm be-facefinder || true
               
               mkdir -p /root/face-finder/uploads /root/face-finder/results
+              touch /root/face-finder/facedb.sqlite
+              chmod 777 /root/face-finder/facedb.sqlite
+              chmod 777 /root/face-finder/uploads
+              chmod 777 /root/face-finder/results
               docker run -d -p 8000:8000 \
                 -v /root/face-finder/uploads:/app/uploads \
                 -v /root/face-finder/results:/app/results \

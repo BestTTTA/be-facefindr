@@ -160,32 +160,6 @@ async def search_uploaded_image(file: UploadFile = File(...)):
         if file_path.exists():
             os.remove(file_path)
 
-@app.post("/upload-multiple")
-async def upload_multiple_images(files: List[UploadFile] = File(...)):
-    """Uploads and adds multiple images to the database in parallel."""
-    try:
-        tasks = []
-        uploaded_info = []
-        for file in files:
-            file_path = UPLOAD_DIR / f"{uuid.uuid4()}_{file.filename}"
-            with file_path.open("wb") as buffer:
-                shutil.copyfileobj(file.file, buffer)
-
-            tasks.append(add_image_to_db_async(str(file_path)))
-            uploaded_info.append({"filename": file.filename, "path": str(file_path)})
-
-        results = await asyncio.gather(*tasks)
-
-        total_faces_found = sum(r["faces_found"] for r in results)
-
-        return {
-            "status": "success",
-            "message": f"Successfully uploaded {len(files)} images to database. Total faces found: {total_faces_found}",
-            "uploaded_files": uploaded_info,
-            "faces_per_image": results
-        }
-    except Exception as e:
-        raise HTTPException(status_code=500, detail=f"Failed to upload multiple images: {str(e)}")
 
 @app.get("/results/{filename}")
 async def get_result_image(filename: str):

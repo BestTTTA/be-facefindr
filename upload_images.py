@@ -4,10 +4,8 @@ from pathlib import Path
 import concurrent.futures
 from tqdm import tqdm
 
-# API endpoint
 API_URL = "https://facefindr.api.thetigerteamacademy.net/upload-to-db"
 
-# Image directories
 IMAGE_DIRS = [
     r"E:\BEST\Images-event-facefindr\สควค-1",
     r"E:\BEST\Images-event-facefindr\สควค-2",
@@ -15,7 +13,6 @@ IMAGE_DIRS = [
 ]
 
 def upload_image(image_path):
-    """Upload a single image to the API"""
     try:
         with open(image_path, 'rb') as f:
             files = {'file': (os.path.basename(image_path), f, 'image/jpeg')}
@@ -45,12 +42,29 @@ def upload_image(image_path):
 def process_directory(directory):
     """Process all images in a directory"""
     image_files = []
+    print(f"\nProcessing directory: {directory}")
+    
+
+    ext_counts = {}
     for ext in ['.jpg', '.jpeg', '.JPG', '.JPEG']:
-        image_files.extend(list(Path(directory).glob(f'*{ext}')))
+        files = list(Path(directory).glob(f'*{ext}'))
+        ext_counts[ext] = len(files)
+        image_files.extend(files)
+        print(f"Found {len(files)} files with extension {ext}")
+    
+    # Check for duplicate filenames (case-insensitive)
+    filenames = [f.name.lower() for f in image_files]
+    duplicates = set([x for x in filenames if filenames.count(x) > 1])
+    if duplicates:
+        print(f"Warning: Found {len(duplicates)} duplicate filenames (case-insensitive)")
+        for dup in list(duplicates)[:5]:  # Show first 5 duplicates
+            print(f"  - {dup}")
+        if len(duplicates) > 5:
+            print(f"  ... and {len(duplicates) - 5} more")
+    
     return image_files
 
 def main():
-    # Collect all image files
     all_images = []
     for directory in IMAGE_DIRS:
         if os.path.exists(directory):
@@ -62,18 +76,29 @@ def main():
         print("No images found in the specified directories")
         return
 
-    print(f"Found {len(all_images)} images to process")
+    print(f"\nTotal unique images found: {len(all_images)}")
+    
+    # Remove duplicates (case-insensitive)
+    unique_images = []
+    seen_names = set()
+    for img in all_images:
+        if img.name.lower() not in seen_names:
+            seen_names.add(img.name.lower())
+            unique_images.append(img)
+    
+    print(f"After removing duplicates: {len(unique_images)} images")
+    
+    if len(unique_images) != len(all_images):
+        print("Removing duplicate files from processing...")
+        all_images = unique_images
 
-    # Process images in parallel
     results = []
     with concurrent.futures.ThreadPoolExecutor(max_workers=5) as executor:
         futures = [executor.submit(upload_image, str(img)) for img in all_images]
         
-        # Show progress bar
         for future in tqdm(concurrent.futures.as_completed(futures), total=len(futures), desc="Uploading images"):
             results.append(future.result())
 
-    # Print summary
     successful = [r for r in results if r['status'] == 'success']
     failed = [r for r in results if r['status'] == 'error']
     
@@ -85,7 +110,6 @@ def main():
     total_faces = sum(r['faces_found'] for r in successful)
     print(f"Total faces found: {total_faces}")
 
-    # Print failed uploads if any
     if failed:
         print("\nFailed uploads:")
         for fail in failed:

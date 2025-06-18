@@ -42,7 +42,7 @@ os.chmod(RESULTS_DIR, 0o777)
 # Thread pool for parallel processing
 executor = ThreadPoolExecutor(max_workers=4)
 
-async def process_image_for_search_async(image_path: str, tolerance: float = 0.4, max_results: int = 21) -> Dict:
+async def process_image_for_search_async(image_path: str, tolerance: float = 0.4, max_results: int = 101) -> Dict:
     """Process a single image for searching asynchronously"""
     loop = asyncio.get_event_loop()
     results = await loop.run_in_executor(

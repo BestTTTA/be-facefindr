@@ -55,7 +55,7 @@ jobs:
               mkdir -p /root/face-finder/db
               touch /root/face-finder/db/facedb.sqlite
               chmod -R 777 /root/face-finder
-              docker run -d -p 8000:8000 \
+              docker run -d -p 9999:8000 \
                 -v /root/face-finder/uploads:/app/uploads \
                 -v /root/face-finder/results:/app/results \
                 -v /root/face-finder/db/facedb.sqlite:/app/facedb.sqlite \

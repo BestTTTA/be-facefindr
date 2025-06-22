@@ -21,8 +21,7 @@ app.add_middleware(
     allow_methods=["*"],
     allow_headers=["*"],
 )
-# SERVER_BASE_URL = "https://facefindr.api.thetigerteamacademy.net"
-SERVER_BASE_URL = "http://119.59.99.192:8000"
+SERVER_BASE_URL = "https://be-facefindr.thetigerteamacademy.net"
 
 # Initialize FaceFindr
 face_finder = FaceFindr(db_path="facedb.sqlite")

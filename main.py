@@ -1,7 +1,7 @@
 from fastapi import FastAPI, UploadFile, File, HTTPException
-from fastapi.responses import JSONResponse, FileResponse
+from fastapi.responses import FileResponse
 from fastapi.middleware.cors import CORSMiddleware
-from typing import List, Dict
+from typing import Dict
 import os
 import uuid
 import shutil
@@ -14,7 +14,6 @@ from facefindr import FaceFindr
 
 app = FastAPI(title="FaceFindr API")
 
-# Configure CORS
 app.add_middleware(
     CORSMiddleware,
     allow_origins=["*"],
@@ -22,9 +21,8 @@ app.add_middleware(
     allow_methods=["*"],
     allow_headers=["*"],
 )
-
-# Server configuration
-SERVER_BASE_URL = "https://facefindr.api.thetigerteamacademy.net"  # Updated domain
+# SERVER_BASE_URL = "https://facefindr.api.thetigerteamacademy.net"
+SERVER_BASE_URL = "http://119.59.99.192:8000"
 
 # Initialize FaceFindr
 face_finder = FaceFindr(db_path="facedb.sqlite")

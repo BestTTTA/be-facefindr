@@ -26,17 +26,14 @@ SERVER_BASE_URL = "https://be-facefindr.thetigerteamacademy.net"
 # Initialize FaceFindr
 face_finder = FaceFindr(db_path="facedb.sqlite")
 
-# Create directories for uploads and results
 UPLOAD_DIR = Path("uploads")
 RESULTS_DIR = Path("results")
 UPLOAD_DIR.mkdir(exist_ok=True)
 RESULTS_DIR.mkdir(exist_ok=True)
 
-# Ensure directories have proper permissions
 os.chmod(UPLOAD_DIR, 0o777)
 os.chmod(RESULTS_DIR, 0o777)
 
-# Thread pool for parallel processing
 executor = ThreadPoolExecutor(max_workers=4)
 
 async def process_image_for_search_async(image_path: str, tolerance: float = 0.4, max_results: int = 101) -> Dict:

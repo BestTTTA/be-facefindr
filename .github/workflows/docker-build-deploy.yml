@@ -47,18 +47,16 @@ jobs:
               docker image prune -a -f
               docker pull \"$DOCKER_IMAGE\"
               
-              # Stop and remove old container if it exists
-              docker stop be-facefinder || true
-              docker rm be-facefinder || true
+              # docker stop be-facefinder || true
+              # docker rm be-facefinder || true
               
-              mkdir -p /root/face-finder/uploads /root/face-finder/results
-              mkdir -p /root/face-finder/db
-              touch /root/face-finder/db/facedb.sqlite
-              chmod -R 777 /root/face-finder
-              docker run -d -p 9999:8000 \
-                -v /root/face-finder/uploads:/app/uploads \
-                -v /root/face-finder/results:/app/results \
-                -v /root/face-finder/db/facedb.sqlite:/app/facedb.sqlite \
-                -e SERVER_BASE_URL=https://facefindr.api.thetigerteamacademy.net \
-                --name be-facefinder \"$DOCKER_IMAGE\"
+              mkdir -p /root/face-ttta/uploads /root/face-ttta/results
+              mkdir -p /root/face-ttta/db
+              touch /root/face-ttta/db/facedb.sqlite
+              chmod -R 777 /root/face-ttta
+              docker run -d -p 7777:8000 \
+                -v /root/face-ttta/uploads:/app/uploads \
+                -v /root/face-ttta/results:/app/results \
+                -v /root/face-ttta/db/facedb.sqlite:/app/facedb.sqlite \
+                --name be-facettta \"$DOCKER_IMAGE\"
             "

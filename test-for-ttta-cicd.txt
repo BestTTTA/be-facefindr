@@ -6,8 +6,8 @@ on:
       - main
 
 env:
-  DOCKER_IMAGE: bestbest/ml-facemenow:1.0.0
-  DEPLOY_SERVER: 119.59.99.92
+  DOCKER_IMAGE: bestbest/be-facefindr:1.0.0
+  DEPLOY_SERVER: 119.59.99.192
   DEPLOY_USER: root
   DEPLOY_PASSWORD: ${{ secrets.SERVER_PASSWORD }}
   DOCKER_PASSWORD: ${{ secrets.DOCKER_PASSWORD }}
@@ -49,14 +49,14 @@ jobs:
               
               # docker stop be-facefinder || true
               # docker rm be-facefinder || true
-
-              mkdir -p /root/facemenow/uploads /root/facemenow/results
-              mkdir -p /root/facemenow/db
-              touch /root/facemenow/db/facedb.sqlite
-              chmod -R 777 /root/facemenow
+              
+              mkdir -p /root/face-ttta/uploads /root/face-ttta/results
+              mkdir -p /root/face-ttta/db
+              touch /root/face-ttta/db/facedb.sqlite
+              chmod -R 777 /root/face-ttta
               docker run -d -p 7777:8000 \
-                -v /root/facemenow/uploads:/app/uploads \
-                -v /root/facemenow/results:/app/results \
-                -v /root/facemenow/db/facedb.sqlite:/app/facedb.sqlite \
-                --name ml-facemenow \"$DOCKER_IMAGE\"
+                -v /root/face-ttta/uploads:/app/uploads \
+                -v /root/face-ttta/results:/app/results \
+                -v /root/face-ttta/db/facedb.sqlite:/app/facedb.sqlite \
+                --name be-facettta \"$DOCKER_IMAGE\"
             "

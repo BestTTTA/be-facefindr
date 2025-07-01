@@ -21,9 +21,8 @@ app.add_middleware(
     allow_methods=["*"],
     allow_headers=["*"],
 )
-SERVER_BASE_URL = "https://be-facettta.thetigerteamacademy.net"
+SERVER_BASE_URL = "https://ml.api.facemenow.co"
 
-# Initialize FaceFindr
 face_finder = FaceFindr(db_path="facedb.sqlite")
 
 UPLOAD_DIR = Path("uploads")
